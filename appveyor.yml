@@ -22,7 +22,7 @@ build_script:
       $appveyorBuildVersion = $env:APPVEYOR_BUILD_VERSION
       $apiToken = $env:APPVEYOR_API_TOKEN
 
-      $url = "https://ci.appveyor.com/api/account/$appveyorAccountName/projects/$appveyorProjectSlug/builds/$appveyorBuildVersion/rdp"
+      $url = "https://ci.appveyor.com/api/projects/$appveyorAccountName/$appveyorProjectSlug/builds/$appveyorBuildVersion/rdp"
       Write-Host "Calling URL: $url"
 
       $headers = @{
