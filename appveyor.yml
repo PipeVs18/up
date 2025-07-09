@@ -1,18 +1,28 @@
+# appveyor.yml
 image: Visual Studio 2022
 
 build: off
 
 init:
   - ps: |
+      Write-Host "=== Setting up RDP user ==="
       $passwd = ConvertTo-SecureString "Password123!" -AsPlainText -Force
       New-LocalUser "rdpuser" -Password $passwd -FullName "RDP User" -Description "User for RDP session"
       Add-LocalGroupMember -Group "Administrators" -Member "rdpuser"
+      Write-Host "User created successfully."
+
+      Write-Host "=== Debug Info ==="
+      Write-Host "APPVEYOR_ACCOUNT_NAME: $env:APPVEYOR_ACCOUNT_NAME"
+      Write-Host "APPVEYOR_PROJECT_SLUG: $env:APPVEYOR_PROJECT_SLUG"
+      Write-Host "APPVEYOR_BUILD_VERSION: $env:APPVEYOR_BUILD_VERSION"
+      Write-Host "APPVEYOR_API_TOKEN: (hidden)"
 
 on_finish:
   - ps: |
+      Write-Host "=== Generating RDP link ==="
       $appveyorAccountName = $env:APPVEYOR_ACCOUNT_NAME
       $appveyorProjectSlug = $env:APPVEYOR_PROJECT_SLUG
       $appveyorBuildVersion = $env:APPVEYOR_BUILD_VERSION
       $url = "https://ci.appveyor.com/api/projects/$appveyorAccountName/$appveyorProjectSlug/builds/$appveyorBuildVersion/rdp"
       $rdp = Invoke-RestMethod -Method POST -Uri $url -Headers @{"Authorization"="Bearer $env:APPVEYOR_API_TOKEN"}
-      Write-Host "RDP link: $($rdp.url)"
+      Write-Host "====> RDP link: $($rdp.url)"
